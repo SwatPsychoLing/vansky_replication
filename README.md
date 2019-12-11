@@ -264,3 +264,41 @@ Now we use the `naturalstories.lstm.filt.evmeasures` file for regressions:
 ```
 
 # 4. Fine and Jaeger (2016) Replication
+
+### 4.1 Running stimuli through model
+For this part, you will be using the data from the folders you created in **Step 2**. For each list in the dataset (List = {ListA1.linetoks, ListA1_Reversed.linetoks, ListB1.linetoks, ListB1_Reversed.linetoks, ListA2.linetoks, ...}), run the below two lines of code:
+```
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/fj16/' --testfname "${list}.linetoks" --test --words > "fj-output/${list}.notadapting.output"  
+    time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --lr ${learnrate} --data_dir './data/fj16/' --testfname "${list}.linetoks" --test --words --adapt --adapted_model "fj-output/adapted_model-${list}.pt" > "fj-output/${list}.adapting.output"
+```
+
+### 4.2 Analyzing results 
+We ran the output through post-processing code, found in the included *process_output.py* file. Read through the file to see what must be provided to the commandline (and see sample command line call below), as well as how to set directory destinations for the program to find the results files. We did our best interpretation of how to proces based off of the information provided in the vansky replication github, but are unsure if it is fully the same. 
+
+**NOTE:** To move your results folder from your AWS instance to your computer (since the below doesn't rely on GPUs to run), you can look up using WinSCP for Windows in the above **Step 1**: *Connecting to SSH Client*. 
+
+Sample command line:
+```
+python process_output.py ListA1.adapting finejaeger.csv
+```
+
+We then ran the R processing code to generate graphs in our university's R Studio. 
+
+```
+library('ggplot2')  
+library('stringr')  
+theme_set(theme_gray(base_size = 16))  
+
+#df <- read.table('finejaeger.csv',sep=',',header=T)  
+#Pull out just the disambiguating region
+disamb <- df[((df$sentpos >=7 & df$sentpos <=9) & df$condition=="ambig") | ((df$sentpos >=9 & df$sentpos <=11) & df$condition=="unambig"),]
+df<-disamb
+
+df$residsurp <- residuals(lm(surp~order,data=df)) 
+
+ggplot(df, aes(order+1, residsurp, group=condition, colour=condition, fill=condition)) + stat_summary(fun.y=mean, geom="point", aes(colour=condition,shape=condition)) + geom_smooth(method=lm, formula= y ~ log(x+1), aes(linetype=condition)) + scale_colour_manual("condition",labels=c('ambiguous','unambiguous'),values=c("red","blue")) + scale_shape_manual("condition",labels=c('ambiguous','unambiguous'),values=c(1,2)) + scale_linetype_manual("condition",labels=c('ambiguous','unambiguous'),values=c('solid','dashed')) + xlab('Item order (#RCs seen)') + ylab('Order-corrected surprisal (bits)')
+ggplot(df, aes(order+1, surp, group=condition, colour=condition, fill=condition)) + stat_summary(fun.y=mean, geom="point", aes(colour=condition,shape=condition)) + geom_smooth(method=lm, formula= y ~ log(x+1), aes(linetype=condition)) + scale_colour_manual("condition",labels=c('ambiguous','unambiguous'),values=c("red","blue")) + scale_shape_manual("condition",labels=c('ambiguous','unambiguous'),values=c(1,2)) + scale_linetype_manual("condition",labels=c('ambiguous','unambiguous'),values=c('solid','dashed')) + xlab('Item order (#RCs seen)') + ylab('Order-corrected surprisal (bits)')
+
+```
+This should generate the proper analysis graphs for the experiment. In our case, it created different graphs from what we expected, which we are looking into. 
+**NOTE:** We made minor modifications to the replication code on vansky's github since that code did not fully work. 
