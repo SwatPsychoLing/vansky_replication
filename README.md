@@ -119,6 +119,148 @@ mv ~/ListA1.linetoks data/fj16  ##perform for every list
 mkdir fj-output
 ```
 
-3. replicating natural stories
+# 3. Naturalstories Replication - Testing the Model
+### 3.0 Preparing files
+Put the `.linetoks` files in a subdirectory `natstor` within the `neural-complexity/data` directory. 
+```
+mkdir /home/ubuntu/neural-complexity/data/natstor
+mv /home/ubuntu/modelblocks-release/workspace/genmodel/*.linetoks /home/ubuntu/neural-complexity/data/natstor
+```
+### 3.1 Analysis 1: Adapting the model to full Natural Stories Corpus
+Use the following quickstart adaptation command to adapt to full text of naturalstories.linetoks
+```
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > full_corpus.adapted.results
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.linetoks' --test --words > full_corpus.notadapted.results
+```
+**If you are receiving the error message** *"RuntimeError: cuDNN version mismatch: PyTorch was compiled against 7003 but linked against 7301"*, run the following:
+```
+unset LD_LIBRARY_PATH
+```
 
-4. replicating fine and jaeger
+The final step in each line of code outputs the perplexity results into `full_corpus.adapted.results` and `full_corpus.notadapted.results`. Check the results with:
+```
+cat full_corpus.notadapted.results
+```
+### 3.2 Analysis 2: Adapting the model to specific story genres.
+Repeating the above with stories in `genmodel/naturalstories.fairy.linetoks` and `genmodel/naturalstories.doc.linetoks`. Copy and run each line of the below code into the command line. The first two commands run on `naturalstories.fairy.linetoks`, while the second two commands run on `naturalstories.doc.linetoks`.
+```
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.fairy.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > fairy.adapted.results
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.fairy.linetoks' --test --words > fairy.notadapted.results   
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.doc.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > doc.adapted.results
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.doc.linetoks' --test --words > doc.notadapted.results   
+```
+### 3.3 Analysis 3: Adapting the model to individual stories
+Repeat the above with each of genmodel/naturalstories.{0,1,2,3,4,5,6}.linetoks compared with each of genmodel/naturalstories.{7,8,9}.linetoks
+```
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.0.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.0.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.0.linetoks' --test --words > naturalstories.0.noadapt.results
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.1.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.1.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.1.linetoks' --test --words > naturalstories.1.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.2.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.2.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.2.linetoks' --test --words > naturalstories.2.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.3.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.3.adapt.results   
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.3.linetoks' --test --words > naturalstories.3.noadapt.results 
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.4.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.4.adapt.results    
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.4.linetoks' --test --words > naturalstories.4.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.5.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.5.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.5.linetoks' --test --words > naturalstories.5.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.6.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.6.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.6.linetoks' --test --words > naturalstories.6.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.7.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.7.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.7.linetoks' --test --words > naturalstories.7.noadapt.results   
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.8.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.8.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.8.linetoks' --test --words > naturalstories.8.noadapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.9.linetoks' --test --words --adapt --adapted_model 'adapted_model.pt' > naturalstories.9.adapt.results  
+time python main.py --model_file 'hidden650_batch128_dropout0.2_lr20.0.pt' --vocab_file 'vocab.txt' --cuda --single --data_dir './data/natstor/' --testfname 'naturalstories.9.linetoks' --test --words > naturalstories.9.noadapt.results  
+```
+### 3.4 Processing resulting data 
+Below is copied directly from **Section 4** of vansky replication with slight modifications for bug fixes.
+***NOTE: Bug Fixes***
+- modify “/home/ubuntu/modelblocks-release/resource-rt/scripts/toks2sents.py” line 26 print statement to include parenthesis 
+- modify “vim /home/ubuntu/modelblocks-release/resource-rt/scripts/toks2sents.py” line 16 to: cur += w.decode(‘UTF-8’)      (for running w python 3)
+- Run code using python2 to fix other bugs 
+
+You'll need `R` along with the following R packages:
+* optparse
+* optimx
+* lme4
+
+Then you'll need to get [R-hacks](https://github.com/aufrank/R-hacks).
+
+Copy the scripts within the `R-hacks` repository into the `modelblocks-release/resources-rhacks/scripts` directory
+
+Use the results from Section 3 Analysis 3, which I'll refer to as `naturalstories.0.{adapt,noadapt}.results`, etc based on the numbers in the linetoks filenames and on whether the model was adaptive or not.
+
+Rename the `surp` column in `naturalstories.0.noadapt.results` to `surpnoa`
+
+```
+    sed -i '1 s/surp/surpnoa/' naturalstories.0.noadapt.results
+```
+
+Paste the `surpnoa` column from each `%noadapt.results` file to the corresponding `%adapt.results` file.
+
+```
+    n=0; paste -d' ' <(cut -d' ' -f-5 "naturalstories.${n}.adapt.results") <(cut -d' ' -f5 "naturalstories.${n}.noadapt.results") <(cut -d' ' -f6- "naturalstories.${n}.adapt.results") > naturalstories.${n}.results
+```
+
+Increment $n until all files have been joined. Then create one long `%results` file
+
+```
+    head -n -3 naturalstories.0.results > naturalstories.full.results  
+    head -n -3 naturalstories.1.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.2.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.3.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.4.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.5.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.6.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.7.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.8.results | tail -n+2 >> naturalstories.full.results  
+    head -n -3 naturalstories.9.results | tail -n+2 >> naturalstories.full.results  
+```
+
+Copy `naturalstories.full.results` to your `modelblocks-release/workspace/` directory  
+Copy `naturalstories/naturalstories_RTS/processed_RTs.tsv` to the `modelblocks-release/workspace` directory and cd to that directory.  
+
+Note: This next section could be made easier, but the modelblocks target syntax changes occasionally (and is currently going through changes as I write this), so to better future-proof things, we'll manually generate most of the needed files. 
+
+```
+    make genmodel/naturalstories.mfields.itemmeasures  
+    echo 'word' > natstor.toks  
+    sed 's/ /\n/g' genmodel/naturalstories.linetoks >> natstor.toks  
+    paste -d' ' natstor.toks <(cut -d' ' -f2-6 naturalstories.full.results) | python2 ../resource-rt/scripts/roll_toks.py <(sed 's/(/-LRB-/g;s/)/-RRB-/g;' genmodel/naturalstories.mfields.itemmeasures) sentid sentpos > naturalstories.lstm.itemmeasures  
+    cut -d' ' -f4- naturalstories.lstm.itemmeasures  | paste -d' ' genmodel/naturalstories.mfields.itemmeasures - > naturalstories.lstm.mergable.itemmeasures  
+    python ../resource-naturalstories/scripts/merge_natstor.py <(cat processed_RTs.tsv | sed 's/\t/ /g;s/peaked/peeked/g;' | python ../resource-rt/scripts/rename_cols.py WorkerId subject RT fdur) naturalstories.lstm.mergable.itemmeasures | sed 's/``/'\''/g;s/'\'\''/'\''/g;s/(/-LRB-/g;s/)/-RRB-/g;' | python ../resource-rt/scripts/rename_cols.py item docid > naturalstories.lstm.core.evmeasures  
+    python ../resource-rt/scripts/rm_unfix_items.py < naturalstories.lstm.core.evmeasures | python ../resource-rt/scripts/rm_na_items.py > naturalstories.lstm.filt.evmeasures  
+    mkdir scripts  
+```
+
+Create a `scripts/spr.lmeform` file that contains these lines:
+
+```
+    fdur  
+    z.(wlen) + z.(sentpos)  
+    z.(wlen) + z.(sentpos)  
+    (1 | word)
+```
+
+Now we use the `naturalstories.lstm.filt.evmeasures` file for regressions:
+
+#### Dev regressions
+
+```
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.base.lme.rdata -d -N -S -C -F -A surp+surpnoa -a surp+surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFd.base.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.surp.lme.rdata -d -N -S -C -F -A surp+surpnoa -a surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFd.surp.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.surpnoa.lme.rdata -d -N -S -C -F -A surp+surpnoa -a surp -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFd.surpnoa.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.both.lme.rdata -d -N -S -C -F -A surp+surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFd.both.lme  
+```
+
+#### Test regressions
+
+```
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.base.lme.rdata -t -N -S -C -F -A surp+surpnoa -a surp+surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFt.base.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.surp.lme.rdata -t -N -S -C -F -A surp+surpnoa -a surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFt.surp.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.surpnoa.lme.rdata -t -N -S -C -F -A surp+surpnoa -a surp -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFt.surpnoa.lme  
+    ../resource-lmefit/scripts/evmeasures2lmefit.r naturalstories.lstm.filt.evmeasures naturalstories.lstm.filt.both.lme.rdata -t -N -S -C -F -A surp+surpnoa -b scripts/spr.lmeform > naturalstories.lstm.filt.-NSCFt.both.lme  
+```
+
+# 4. Fine and Jaeger (2016) Replication
