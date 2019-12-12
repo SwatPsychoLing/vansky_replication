@@ -5,7 +5,7 @@ Implementing the code by [**van Schijndel & Linzen (2018)**](https://vansky.gith
 ### 1.0 Create an AWS account
 Create an Amazon EC2 server by creating an [AWS](https://aws.amazon.com/) account. You will be creating a server that will provide you with access to GPUs, which will be required to run the neural networks training and testing in seconds instead of hours or days. If you are from an educational institution, check your institution's information on AWS as you may be eligible for free starting credits in your account through AWS Educate. 
 
-If you wish to not use your own credit card for initializing the account, you can acquire virtual debit cards from __________
+If you wish to not use your own credit card for initializing the account, you can acquire virtual debit cards.
 
 ### 1.1 Extend your access to AWS EC2 servers with GRUs
 Go to your [EC2 Management Console](https://aws.amazon.com/console/), click the *Limits* link on the top of the menu on the left. Locate *Running On-Demand p2.xlarge instances* in the list of instances that come up and click `Request limit increase`. Under *Requests*, select `US East (Ohio)` for *Region*, and `p2.xlarge` for *Primary Instance Type*, and `1` for *New limit value*.
@@ -41,8 +41,6 @@ Copy and past the link that comes up into your browser, this will allow you to a
 
 
 # 2. Preparing files 
-    see own bash file?? 
-    distinguish between: files needed for all, files for natstor, files for fine and jaeger 
     
 ### 2.0 For all replications (naturalstories and Fine and Jaeger)
 - ***2.0.1 Get Pytorch v0.3.0***
